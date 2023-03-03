@@ -58,6 +58,7 @@ code {
 
 .tile-container div {
   display: flex;
+  margin-bottom: 0px;
 }
 
 .tile-container .tile {
