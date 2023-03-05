@@ -1,19 +1,21 @@
+import { TileState } from "../Game";
 import GuessRow from "./GuessRow";
 
 
 interface GuessRowsProps {
-    rows: String[][]
+    rows: string[][],
+    tileStates: TileState[][]
 }
 
-export default function GuessRows({ rows }: GuessRowsProps) {
+export default function GuessRows({ rows, tileStates }: GuessRowsProps) {
     return (
         <div className="tile-container">
             {
-                rows.map((row: String[], index: Number) => {
+                rows.map((row: string[], index: number) => {
                     return <div
                         key={`row-${index}`}
                     >
-                        <GuessRow row={row} />
+                        <GuessRow row={row} tileStates={tileStates[index]} />
                     </div>
                 })
             }

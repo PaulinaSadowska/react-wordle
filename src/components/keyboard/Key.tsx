@@ -1,7 +1,7 @@
 
 interface KeyProps {
-    text: String,
-    onKeyClicked: (text: String) => void
+    text: string,
+    onKeyClicked: (text: string) => void
 }
 
 export default function Key({ text, onKeyClicked }: KeyProps) {

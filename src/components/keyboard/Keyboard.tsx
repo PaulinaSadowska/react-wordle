@@ -1,13 +1,13 @@
 import Key from "./Key";
 
 interface KeyboardProps {
-    onKeyClicked: (text: String) => void
+    onKeyClicked: (text: string) => void
 }
 
 export default function Keyboard({ onKeyClicked } : KeyboardProps) {
     return (
         <div className="key-container">
-            {keys.map((key: String) => {
+            {keys.map((key: string) => {
                 return <Key 
                     text={key}
                     key={key.toString()}
@@ -18,7 +18,7 @@ export default function Keyboard({ onKeyClicked } : KeyboardProps) {
     );
 }
 
-const keys : String[] = [
+const keys : string[] = [
     'Q',
     'W',
     'E',

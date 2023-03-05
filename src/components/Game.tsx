@@ -6,9 +6,18 @@ import Message from "./Message";
 interface GameState {
     currentRow: number,
     currentTile: number,
-    message: String,
-    guessRows: String[][]
+    message: string,
+    isGameOver: Boolean,
+    word: string,
+    guessRows: string[][],
+    tileStates: TileState[][]
 }
+
+export const enum TileState {
+    Grey,
+    Green,
+    Yellow
+  }
 
 export default class Game extends React.Component {
 
@@ -16,6 +25,8 @@ export default class Game extends React.Component {
         currentRow: 0,
         currentTile: 0,
         message: "",
+        isGameOver: false,
+        word: "OFFER",
         guessRows: [
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -23,7 +34,15 @@ export default class Game extends React.Component {
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', '']
-        ]
+        ],
+        tileStates: [
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+        ],
     };
 
     render() {
@@ -35,9 +54,10 @@ export default class Game extends React.Component {
                 <Message message={this.state.message} />
                 <GuessRows
                     rows={this.state.guessRows}
+                    tileStates={this.state.tileStates}
                 />
                 <Keyboard
-                    onKeyClicked={(text: String) => {
+                    onKeyClicked={(text: string) => {
                         this.onKeyClicked(text);
                     }}
                 />
@@ -45,7 +65,7 @@ export default class Game extends React.Component {
         );
     }
 
-    private onKeyClicked(text: String) {
+    private onKeyClicked(text: string) {
         if (text === '«') {
             this.deleteLetter();
         }
@@ -57,7 +77,7 @@ export default class Game extends React.Component {
         }
     }
 
-    private addLetter(text: String) {
+    private addLetter(text: string) {
         let newRows = this.state.guessRows.slice();
         newRows[this.state.currentRow][this.state.currentTile] = text;
         this.setState({
@@ -68,13 +88,30 @@ export default class Game extends React.Component {
 
     private checkRow() {
         if (this.state.currentTile === 5) {
-            const guess = this.state.guessRows[this.state.currentRow].join('')
+            const guessRow = this.state.guessRows[this.state.currentRow]
+            const guess = guessRow.join('')
             console.log(`guess is ${guess}`);
+            const tileStates = this.state.tileStates.slice();
+            const wordle = this.state.word.split("")
+            tileStates[this.state.currentRow] = guessRow.map((guessedChar, index) => {
+                console.log(guessedChar)
+                console.log(wordle.includes(guessedChar))
+                return (guessedChar === wordle[index])
+                    ? TileState.Green
+                    : (wordle.includes(guessedChar))
+                    ? TileState.Yellow
+                    : TileState.Grey
+            })
+
+            console.log(this.state)
             this.setState({
                 currentTile: 0,
                 currentRow: this.state.currentRow + 1,
-                message: `guess is ${guess}`
+                message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
+                isGameOver: this.state.currentRow === 5,
+                tileStates: tileStates
             });
+            setTimeout(() => this.setState({ message: "" }), 2000)
         }
     }
 
