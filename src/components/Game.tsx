@@ -12,12 +12,8 @@ interface GameState {
     word: string,
     guessRows: string[][],
     tileStates: TileState[][]
-    keys: KeyData[]
-}
-
-export interface KeyData {
-    key: string,
-    keyState: KeyState
+    keys: string[],
+    keysState: KeyState[]
 }
 
 export const enum TileState {
@@ -30,8 +26,9 @@ export const enum TileState {
 
 export const enum KeyState {
     Grey,
+    LightGrey,
     Green,
-    Yellow
+    Yellow,
 }
 
 const allKeys: string[] = [
@@ -75,7 +72,8 @@ export default class Game extends React.Component {
         word: "OFFER",
         guessRows: this.initializeBoardWith(""),
         tileStates: this.initializeBoardWith(TileState.Inactive),
-        keys: allKeys.map((text) => { return { key: text, keyState: KeyState.Grey } })
+        keys: allKeys,
+        keysState: allKeys.map(() => { return KeyState.LightGrey })
     };
 
     private initializeBoardWith(data: any): any[][] {
@@ -83,7 +81,6 @@ export default class Game extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.state)
         getRandomWord().then((word) => {
             this.setState({
                 word: word
@@ -104,6 +101,7 @@ export default class Game extends React.Component {
                 />
                 <Keyboard
                     keys={this.state.keys}
+                    keysState={this.state.keysState}
                     onKeyClicked={(text: string) => {
                         this.onKeyClicked(text);
                     }}
@@ -172,12 +170,27 @@ export default class Game extends React.Component {
         const guessRow = this.state.guessRows[this.state.currentRow]
         const wordle = this.state.word.split("")
 
-        const newState = guessRow.map((guessedChar, index) => {
-            return (guessedChar === wordle[index])
+        const newState = Array.from(Array(5)).map(() => { return TileState.Inactive; })
+        const keyStates = this.state.keysState.slice()
+
+        guessRow.forEach((guessedChar, index) => {
+            const tileState = (guessedChar === wordle[index])
                 ? TileState.Green
                 : (wordle.includes(guessedChar))
                     ? TileState.Yellow
                     : TileState.Grey
+            const keyState = (guessedChar === wordle[index])
+                ? KeyState.Green
+                : (wordle.includes(guessedChar))
+                    ? KeyState.Yellow
+                    : KeyState.Grey
+            newState[index] = tileState
+            const foundKeyIndex = this.state.keys.indexOf(guessedChar)
+            if (foundKeyIndex) {
+                //TODO should not update state if prev was better
+                keyStates[foundKeyIndex] = keyState
+            }
+
         })
 
         newState.forEach((state, index) => {
@@ -185,9 +198,17 @@ export default class Game extends React.Component {
                 const tileStates = this.state.tileStates.slice();
                 tileStates[this.state.currentRow - 1][index] = state
                 this.setState({
-                    tileStates: tileStates
+                    tileStates: tileStates,
                 })
             }, 500 * index)
         })
+
+        setTimeout(() => {
+
+            this.setState({
+                keysState: keyStates
+            })
+        }, 3000)
+
     }
 }

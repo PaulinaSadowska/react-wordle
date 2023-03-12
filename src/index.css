@@ -45,6 +45,7 @@ code {
   border: none;
   background-color: #818384;
   margin: 4px;
+  color: white;
 }
 
 .key-container button:nth-child(11) {
@@ -105,6 +106,12 @@ code {
   background-color: #3a3a3c !important;
   border:none !important;
 }
+
+.lightgrey-overlay {
+  background-color: #646467 !important;
+  border:none !important;
+}
+
 .yellow-overlay {
   background-color: #b59f3a !important;
   border:none !important;

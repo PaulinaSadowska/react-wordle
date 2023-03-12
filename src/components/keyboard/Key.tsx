@@ -19,5 +19,7 @@ function convertTileStateToClassName(tileState: KeyState) : string {
         ? "green-overlay"
         : (tileState === KeyState.Yellow)
         ? "yellow-overlay"
+        : (tileState === KeyState.LightGrey)
+        ? "lightgrey-overlay"
         : "grey-overlay"
 }

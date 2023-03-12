@@ -1,19 +1,20 @@
-import { KeyData } from "../Game";
+import { KeyState } from "../Game";
 import Key from "./Key";
 
 interface KeyboardProps {
-    keys: KeyData[]
+    keys: string[],
+    keysState: KeyState[]
     onKeyClicked: (text: string) => void
 }
 
-export default function Keyboard({ keys, onKeyClicked }: KeyboardProps) {
+export default function Keyboard({ keys, keysState, onKeyClicked }: KeyboardProps) {
     return (
         <div className="key-container">
-            {keys.map((key: KeyData, index: number) => {
+            {keys.map((key: string, index: number) => {
                 return <Key
-                    text={key.key}
-                    keyState={key.keyState}
-                    key={key.key.toString()}
+                    text={key}
+                    keyState={keysState[index]}
+                    key={key.toString()}
                     onKeyClicked={onKeyClicked}
                 />
             })}
