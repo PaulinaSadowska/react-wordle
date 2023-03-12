@@ -8,10 +8,16 @@ interface GameState {
     currentRow: number,
     currentTile: number,
     message: string,
-    isGameOver: Boolean,
+    isGameOver: boolean,
     word: string,
     guessRows: string[][],
     tileStates: TileState[][]
+    keys: KeyData[]
+}
+
+export interface KeyData {
+    key: string,
+    keyState: KeyState
 }
 
 export const enum TileState {
@@ -21,6 +27,44 @@ export const enum TileState {
     Inactive
 }
 
+
+export const enum KeyState {
+    Grey,
+    Green,
+    Yellow
+}
+
+const allKeys: string[] = [
+    'Q',
+    'W',
+    'E',
+    'R',
+    'T',
+    'Y',
+    'U',
+    'I',
+    'O',
+    'P',
+    'A',
+    'S',
+    'D',
+    'F',
+    'G',
+    'H',
+    'J',
+    'K',
+    'L',
+    'ENTER',
+    'Z',
+    'X',
+    'C',
+    'V',
+    'B',
+    'N',
+    'M',
+    '«',
+]
+
 export default class Game extends React.Component {
 
     state: GameState = {
@@ -29,25 +73,17 @@ export default class Game extends React.Component {
         message: "",
         isGameOver: false,
         word: "OFFER",
-        guessRows: [
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', '']
-        ],
-        tileStates: [
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
-        ],
+        guessRows: this.initializeBoardWith(""),
+        tileStates: this.initializeBoardWith(TileState.Inactive),
+        keys: allKeys.map((text) => { return { key: text, keyState: KeyState.Grey } })
     };
 
+    private initializeBoardWith(data: any): any[][] {
+        return Array.from(Array(6)).map(() => { return Array.from(Array(5)).map(() => { return data; }); });
+    }
+
     componentDidMount() {
+        console.log(this.state)
         getRandomWord().then((word) => {
             this.setState({
                 word: word
@@ -67,6 +103,7 @@ export default class Game extends React.Component {
                     tileStates={this.state.tileStates}
                 />
                 <Keyboard
+                    keys={this.state.keys}
                     onKeyClicked={(text: string) => {
                         this.onKeyClicked(text);
                     }}
@@ -152,7 +189,5 @@ export default class Game extends React.Component {
                 })
             }, 500 * index)
         })
-
-
     }
 }

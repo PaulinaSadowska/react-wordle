@@ -1,51 +1,22 @@
+import { KeyData } from "../Game";
 import Key from "./Key";
 
 interface KeyboardProps {
+    keys: KeyData[]
     onKeyClicked: (text: string) => void
 }
 
-export default function Keyboard({ onKeyClicked } : KeyboardProps) {
+export default function Keyboard({ keys, onKeyClicked }: KeyboardProps) {
     return (
         <div className="key-container">
-            {keys.map((key: string) => {
-                return <Key 
-                    text={key}
-                    key={key.toString()}
-                    onKeyClicked = {onKeyClicked}
+            {keys.map((key: KeyData, index: number) => {
+                return <Key
+                    text={key.key}
+                    keyState={key.keyState}
+                    key={key.key.toString()}
+                    onKeyClicked={onKeyClicked}
                 />
             })}
         </div>
     );
 }
-
-const keys : string[] = [
-    'Q',
-    'W',
-    'E',
-    'R',
-    'T',
-    'Y',
-    'U',
-    'I',
-    'O',
-    'P',
-    'A',
-    'S',
-    'D',
-    'F',
-    'G',
-    'H',
-    'J',
-    'K',
-    'L',
-    'ENTER',
-    'Z',
-    'X',
-    'C',
-    'V',
-    'B',
-    'N',
-    'M',
-    '«',
-]
-  
