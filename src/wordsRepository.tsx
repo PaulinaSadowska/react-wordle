@@ -13,7 +13,6 @@ async function getRandomWordLocal(): Promise<string | any> {
     return axios.get("http://localhost:3000/answers.txt")
     .then((response: any) => {
         const allWords : string[] = response.data.split(" ")
-        console.log("len: " + allWords.length)
         return allWords[random(allWords.length - 1)]
     }).catch((error: any) => {
         console.error(error)
@@ -31,7 +30,6 @@ async function getRandomWordFromApi(): Promise<string> {
         }
     }
     return axios.request(options).then((response: any) => {
-        console.log(response.data)
         return response.data[0]
     }).catch((error: any) => {
         console.error(error)

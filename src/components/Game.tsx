@@ -49,10 +49,9 @@ export default class Game extends React.Component {
 
     componentDidMount() {
         getRandomWord().then((word) => {
-            console.log("RESULT IS: " + word)
-        })
-        checkWord("OFFER").then((result) => {
-            console.log(result)
+            this.setState({
+                word: word
+            })
         })
     }
 
@@ -100,18 +99,24 @@ export default class Game extends React.Component {
     private checkRow() {
         if (this.state.currentTile === 5) {
             const guess = this.state.guessRows[this.state.currentRow].join('')
-            console.log(`guess is ${guess}`);
 
-            this.modifyTileState()
-
-            console.log(this.state)
-            this.setState({
-                currentTile: 0,
-                currentRow: this.state.currentRow + 1,
-                message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
-                isGameOver: this.state.currentRow === 5,
-            });
-            setTimeout(() => this.setState({ message: "" }), 3000)
+            checkWord(guess).then((result) => {
+                if (result === true) {
+                    this.setState({
+                        currentTile: 0,
+                        currentRow: this.state.currentRow + 1,
+                        message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
+                        isGameOver: this.state.currentRow === 5,
+                    });
+                    this.modifyTileState()
+                    setTimeout(() => this.setState({ message: "" }), 3000)
+                } else {
+                    this.setState({
+                        message: "Incorrect word",
+                    });
+                    setTimeout(() => this.setState({ message: "" }), 3000)
+                }
+            })
         }
     }
 
