@@ -16,8 +16,9 @@ interface GameState {
 export const enum TileState {
     Grey,
     Green,
-    Yellow
-  }
+    Yellow,
+    Inactive
+}
 
 export default class Game extends React.Component {
 
@@ -36,12 +37,12 @@ export default class Game extends React.Component {
             ['', '', '', '', '']
         ],
         tileStates: [
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
-            [TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey, TileState.Grey],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
+            [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
         ],
     };
 
@@ -88,20 +89,10 @@ export default class Game extends React.Component {
 
     private checkRow() {
         if (this.state.currentTile === 5) {
-            const guessRow = this.state.guessRows[this.state.currentRow]
-            const guess = guessRow.join('')
+            const guess = this.state.guessRows[this.state.currentRow].join('')
             console.log(`guess is ${guess}`);
-            const tileStates = this.state.tileStates.slice();
-            const wordle = this.state.word.split("")
-            tileStates[this.state.currentRow] = guessRow.map((guessedChar, index) => {
-                console.log(guessedChar)
-                console.log(wordle.includes(guessedChar))
-                return (guessedChar === wordle[index])
-                    ? TileState.Green
-                    : (wordle.includes(guessedChar))
-                    ? TileState.Yellow
-                    : TileState.Grey
-            })
+
+            this.modifyTileState()
 
             console.log(this.state)
             this.setState({
@@ -109,9 +100,8 @@ export default class Game extends React.Component {
                 currentRow: this.state.currentRow + 1,
                 message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
                 isGameOver: this.state.currentRow === 5,
-                tileStates: tileStates
             });
-            setTimeout(() => this.setState({ message: "" }), 2000)
+            setTimeout(() => this.setState({ message: "" }), 3000)
         }
     }
 
@@ -124,5 +114,30 @@ export default class Game extends React.Component {
                 guessRows: newRows
             });
         }
+    }
+
+    private modifyTileState() {
+        const guessRow = this.state.guessRows[this.state.currentRow]
+        const wordle = this.state.word.split("")
+
+        const newState = guessRow.map((guessedChar, index) => {
+            return (guessedChar === wordle[index])
+                ? TileState.Green
+                : (wordle.includes(guessedChar))
+                    ? TileState.Yellow
+                    : TileState.Grey
+        })
+
+        newState.forEach((state, index) => {
+            setTimeout(() => {
+                const tileStates = this.state.tileStates.slice();
+                tileStates[this.state.currentRow - 1][index] = state
+                this.setState({
+                    tileStates: tileStates
+                })
+            }, 500 * index)
+        })
+
+
     }
 }

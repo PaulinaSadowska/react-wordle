@@ -20,10 +20,12 @@ export default function GuessRow({ row, tileStates }: GuessRowProps) {
     );
 }
 
-function convertTileStateToClassName(tileState: TileState) : String {
+function convertTileStateToClassName(tileState: TileState) : string {
     return (tileState === TileState.Green) 
-        ? "green-overlay"
+        ? "flip green-overlay"
         : (tileState === TileState.Yellow)
-        ? "yellow-overlay"
+        ? "flip yellow-overlay"
+        : (tileState === TileState.Grey)
+        ? "flip grey-overlay"
         : "grey-overlay"
 }
