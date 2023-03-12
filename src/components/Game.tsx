@@ -1,4 +1,5 @@
 import React from "react";
+import { checkWord, getRandomWord } from "../wordsRepository";
 import GuessRows from "./guess/GuessRows";
 import Keyboard from "./keyboard/Keyboard";
 import Message from "./Message";
@@ -45,6 +46,15 @@ export default class Game extends React.Component {
             [TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive, TileState.Inactive],
         ],
     };
+
+    componentDidMount() {
+        getRandomWord().then((word) => {
+            console.log("RESULT IS: " + word)
+        })
+        checkWord("OFFER").then((result) => {
+            console.log(result)
+        })
+    }
 
     render() {
         return (
