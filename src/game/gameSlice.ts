@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import allKeys from '../data/AllKeys';
-import KeyState from '../data/KeyState';
 import TileState from '../data/TileState';
 import { modifyTileReducer } from './modifyTileState';
-import { modifyKeysReducer } from './modifyKeyState';
 import { addLetterReducer, deleteLetterReducer } from './keyboardReducers';
 import { fetchWordToGuess } from './fetchWordToGuess';
 
@@ -14,8 +11,6 @@ export interface GameState {
   word: string,
   guessRows: string[][],
   tileStates: TileState[][]
-  keys: string[],
-  keysState: KeyState[]
 }
 
 const initialState: GameState = {
@@ -25,8 +20,6 @@ const initialState: GameState = {
   word: "OFFER",
   guessRows: initializeBoardWith(""),
   tileStates: initializeBoardWith(TileState.Inactive),
-  keys: allKeys,
-  keysState: allKeys.map(() => { return KeyState.LightGrey })
 };
 
 export const gameSlice = createSlice({
@@ -36,7 +29,6 @@ export const gameSlice = createSlice({
     deleteLetter: deleteLetterReducer,
     addLetter: addLetterReducer,
     modifyTile: modifyTileReducer,
-    modifyKeys: modifyKeysReducer,
     moveToNextRow: (state) => {
       state.currentTile = 0;
       state.currentRow = state.currentRow + 1;
@@ -55,7 +47,7 @@ export const gameSlice = createSlice({
   }
 })
 
-export const { deleteLetter, addLetter, endGame, modifyTile, modifyKeys, moveToNextRow } = gameSlice.actions
+export const { deleteLetter, addLetter, endGame, modifyTile, moveToNextRow } = gameSlice.actions
 
 export default gameSlice.reducer
 

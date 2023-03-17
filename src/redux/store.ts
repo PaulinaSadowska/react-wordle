@@ -1,12 +1,14 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import gameSlice from '../game/gameSlice'
+import keysSlice from '../game/keysSlice'
 import messageSlice from '../game/messageSlice'
 // ...
 
 export const store = configureStore({
   reducer: {
     game: gameSlice,
-    message: messageSlice
+    message: messageSlice,
+    keys: keysSlice
   }
 })
 

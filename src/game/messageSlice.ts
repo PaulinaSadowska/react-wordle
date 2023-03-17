@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import allKeys from '../data/AllKeys';
-import KeyState from '../data/KeyState';
-import TileState from '../data/TileState';
-import { modifyTileReducer } from './modifyTileState';
-import { modifyKeysReducer } from './modifyKeyState';
-import { addLetterReducer, deleteLetterReducer } from './keyboardReducers';
-import { fetchWordToGuess } from './fetchWordToGuess';
+
 import { AppThunk } from '../redux/store';
 
 export interface MessageState {
@@ -23,7 +17,7 @@ export const showTemporaryMessage = (text: string): AppThunk =>
 };
 
 export const messageSlice = createSlice({
-  name: 'wordle',
+  name: 'message',
   initialState,
   reducers: {
     showMessage: (state: MessageState, action: PayloadAction<string>) => {

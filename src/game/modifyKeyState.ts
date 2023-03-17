@@ -1,20 +1,19 @@
-import { PayloadAction } from "@reduxjs/toolkit";
 import KeyState from "../data/KeyState";
-import { GameState, modifyKeys } from "../game/gameSlice";
 import { AppThunk } from "../redux/store";
+import { modifyKeys } from "./keysSlice";
 
 export const modifyKeyState = (): AppThunk =>
     (dispatch, getState) => {
-        const state = getState().game
+        
+        const gameState = getState().game
+        const guessRow = gameState.guessRows[gameState.currentRow - 1]
+        const wordle = gameState.word.split("")
 
-        const guessRow = state.guessRows[state.currentRow - 1]
-        const wordle = state.word.split("")
-
-        const keyStates = state.keysState.slice()
+        const keyStates =  getState().keys.keysState.slice()
 
         guessRow.forEach((guessedChar, index) => {
             const keyState = toKeyState(guessedChar, wordle, index)
-            const foundKeyIndex = state.keys.indexOf(guessedChar) 
+            const foundKeyIndex =  getState().keys.keys.indexOf(guessedChar) 
             if (keyStateImportance(keyState) > keyStateImportance(keyStates[foundKeyIndex])) {
                 keyStates[foundKeyIndex] = keyState
             }
@@ -31,10 +30,6 @@ function toKeyState(guessedChar: string, wordle: string[], index: number) {
         : (wordle.includes(guessedChar))
             ? KeyState.Yellow
             : KeyState.Grey;
-}
-
-export function modifyKeysReducer(state: GameState, action: PayloadAction<KeyState[]>): any {
-    state.keysState = action.payload
 }
 
 function keyStateImportance(keyState: KeyState): number {
