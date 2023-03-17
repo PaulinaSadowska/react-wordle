@@ -85,6 +85,7 @@ export default class Game extends React.Component {
             this.setState({
                 word: word
             })
+            console.log(word)
         })
     }
 
@@ -111,6 +112,9 @@ export default class Game extends React.Component {
     }
 
     private onKeyClicked(text: string) {
+        if (this.state.isGameOver === true) {
+            return
+        }
         if (text === '«') {
             this.deleteLetter();
         }
@@ -135,23 +139,34 @@ export default class Game extends React.Component {
         if (this.state.currentTile === 5) {
             const guess = this.state.guessRows[this.state.currentRow].join('')
 
-            checkWord(guess).then((result) => {
-                if (result === true) {
-                    this.setState({
-                        currentTile: 0,
-                        currentRow: this.state.currentRow + 1,
-                        message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
-                        isGameOver: this.state.currentRow === 5,
-                    });
-                    this.modifyTileState()
-                    setTimeout(() => this.setState({ message: "" }), 3000)
-                } else {
-                    this.setState({
-                        message: "Incorrect word",
-                    });
-                    setTimeout(() => this.setState({ message: "" }), 3000)
-                }
-            })
+            if (guess === this.state.word) {
+                this.setState({
+                    currentRow: this.state.currentRow + 1,
+                    message: "Congratulations!",
+                    isGameOver: true,
+                });
+                this.modifyTileState()
+            } else {
+                checkWord(guess).then((result) => {
+                    if (result === true) {
+                        this.setState({
+                            currentTile: 0,
+                            currentRow: this.state.currentRow + 1,
+                            message: (this.state.currentRow === 5) ? "Game Over" : `guess is ${guess}`,
+                            isGameOver: this.state.currentRow === 5,
+                        });
+                        this.modifyTileState()
+                        if (this.state.currentRow >= 5) {
+                            setTimeout(() => this.setState({ message: "" }), 3000)
+                        }
+                    } else {
+                        this.setState({
+                            message: "Incorrect word",
+                        });
+                        setTimeout(() => this.setState({ message: "" }), 3000)
+                    }
+                })
+            }
         }
     }
 
@@ -187,8 +202,10 @@ export default class Game extends React.Component {
             newState[index] = tileState
             const foundKeyIndex = this.state.keys.indexOf(guessedChar)
             if (foundKeyIndex) {
-                //TODO should not update state if prev was better
-                keyStates[foundKeyIndex] = keyState
+                const foundState = keyStates[foundKeyIndex]
+                if (this.keyStateImportance(keyState) > this.keyStateImportance(foundState)) {
+                    keyStates[foundKeyIndex] = keyState
+                }
             }
 
         })
@@ -210,5 +227,15 @@ export default class Game extends React.Component {
             })
         }, 3000)
 
+    }
+
+    private keyStateImportance(keyState: KeyState): number {
+        return keyState === KeyState.Green
+            ? 3
+            : keyState === KeyState.Yellow
+                ? 2
+                : keyState === KeyState.Grey
+                    ? 1
+                    : 0
     }
 }
