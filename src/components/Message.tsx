@@ -1,5 +1,3 @@
-
-
 interface MessageProps {
     message: String
 }

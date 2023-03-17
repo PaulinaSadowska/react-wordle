@@ -1,4 +1,4 @@
-import { KeyState } from "../Game";
+import KeyState from "../../data/KeyState";
 import Key from "./Key";
 
 interface KeyboardProps {

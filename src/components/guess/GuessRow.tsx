@@ -1,4 +1,4 @@
-import { TileState } from "../Game";
+import TileState from "../../data/TileState";
 
 interface GuessRowProps {
     row: string[],

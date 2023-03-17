@@ -1,4 +1,4 @@
-import { TileState } from "../Game";
+import TileState from "../../data/TileState";
 import GuessRow from "./GuessRow";
 
 
