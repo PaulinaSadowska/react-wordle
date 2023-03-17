@@ -2,18 +2,20 @@ import GuessRows from "./guess/GuessRows";
 import Keyboard from "./keyboard/Keyboard";
 import Message from "./Message";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { GameState } from "../reducers/gameSlice";
-import { onKeyClicked } from "../middlewares/onKeyClicked";
+import { GameState } from "../game/gameSlice";
 import { useEffect } from "react";
-import { fetchWordAsync } from "../reducers/fetchWordAsync";
+import { onKeyClicked } from "../game/onKeyClicked";
+import { fetchWordToGuess } from "../game/fetchWordToGuess";
+import { MessageState } from "../game/messageSlice";
 
 export default function Game() {
 
     const state: GameState = useAppSelector(state => state.game)
+    const messageState: MessageState = useAppSelector(state => state.message)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchWordAsync());
+        dispatch(fetchWordToGuess());
     }, [dispatch]);
 
     return (
@@ -21,7 +23,7 @@ export default function Game() {
             <header className="title-container">
                 <h1>Wordle</h1>
             </header>
-            <Message message={state.message} />
+            <Message message={messageState.message} />
             <GuessRows
                 rows={state.guessRows}
                 tileStates={state.tileStates}

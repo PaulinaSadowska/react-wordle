@@ -2,18 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 import allKeys from '../data/AllKeys';
 import KeyState from '../data/KeyState';
 import TileState from '../data/TileState';
-import { modifyKeysReducer } from '../middlewares/modifyKeyState';
-import { modifyTileReducer } from '../middlewares/modifyTileState';
-import addLetterReducer from './addLetterReducer';
-import { moveToNextRowReducer } from './checkWordAsync';
-import deleteLetterReducer from './deleteLetterReducer';
-import { fetchWordAsync, fetchWordResultReducer } from './fetchWordAsync';
-import winGameReducer from './winGame';
+import { modifyTileReducer } from './modifyTileState';
+import { modifyKeysReducer } from './modifyKeyState';
+import { addLetterReducer, deleteLetterReducer } from './keyboardReducers';
+import { fetchWordToGuess } from './fetchWordToGuess';
 
 export interface GameState {
   currentRow: number,
   currentTile: number,
-  message: string,
   isGameOver: boolean,
   word: string,
   guessRows: string[][],
@@ -25,7 +21,6 @@ export interface GameState {
 const initialState: GameState = {
   currentRow: 0,
   currentTile: 0,
-  message: "",
   isGameOver: false,
   word: "OFFER",
   guessRows: initializeBoardWith(""),
@@ -40,18 +35,27 @@ export const gameSlice = createSlice({
   reducers: {
     deleteLetter: deleteLetterReducer,
     addLetter: addLetterReducer,
-    winGame: winGameReducer,
     modifyTile: modifyTileReducer,
     modifyKeys: modifyKeysReducer,
-    moveToNextRow: moveToNextRowReducer,
+    moveToNextRow: (state) => {
+      state.currentTile = 0;
+      state.currentRow = state.currentRow + 1;
+      state.isGameOver = state.currentRow === 5;
+    },
+    endGame: (state) => {
+      state.isGameOver = true;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchWordAsync.fulfilled, fetchWordResultReducer)
-    }
+      .addCase(fetchWordToGuess.fulfilled, (state, action) => {
+        console.log(action.payload)
+        state.word = action.payload
+      })
+  }
 })
 
-export const { deleteLetter, addLetter, winGame, modifyTile, modifyKeys, moveToNextRow } = gameSlice.actions
+export const { deleteLetter, addLetter, endGame, modifyTile, modifyKeys, moveToNextRow } = gameSlice.actions
 
 export default gameSlice.reducer
 

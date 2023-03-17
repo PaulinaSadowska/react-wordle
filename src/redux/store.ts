@@ -1,10 +1,12 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
-import gameSlice from '../reducers/gameSlice'
+import gameSlice from '../game/gameSlice'
+import messageSlice from '../game/messageSlice'
 // ...
 
 export const store = configureStore({
   reducer: {
-    game: gameSlice
+    game: gameSlice,
+    message: messageSlice
   }
 })
 

@@ -1,6 +1,6 @@
-import { addLetter, deleteLetter } from "../reducers/gameSlice";
+import { addLetter, deleteLetter } from "../game/gameSlice";
 import { AppThunk } from "../redux/store";
-import { checkRow } from "./checkRow";
+import { submitGuess } from "./submitGuess";
 
 export const onKeyClicked = (text: string): AppThunk =>
     (dispatch, getState) => {
@@ -11,7 +11,7 @@ export const onKeyClicked = (text: string): AppThunk =>
             dispatch(deleteLetter())
         }
         else if (text === 'ENTER') {
-            dispatch(checkRow())
+            dispatch(submitGuess())
         }
         else if (getState().game.currentTile < 5) {
             dispatch(addLetter(text));
