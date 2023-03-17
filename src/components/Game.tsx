@@ -2,13 +2,14 @@ import GuessRows from "./guess/GuessRows";
 import Keyboard from "./keyboard/Keyboard";
 import Message from "./Message";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { GameState, onKeyClicked } from "../reducers/gameSlice";
+import { GameState } from "../reducers/gameSlice";
+import { onKeyClicked } from "../middlewares/onKeyClicked";
 
 export default function Game() {
 
-    const state : GameState = useAppSelector(state => state.game)
+    const state: GameState = useAppSelector(state => state.game)
     const dispatch = useAppDispatch()
-  
+
     return (
         <div className="game-container">
             <header className="title-container">
@@ -28,4 +29,4 @@ export default function Game() {
             />
         </div>
     );
-  }
+}

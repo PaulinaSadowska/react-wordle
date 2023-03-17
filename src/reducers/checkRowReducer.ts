@@ -13,6 +13,7 @@ function checkRowReducer(state: GameState): any {
             state.isGameOver = true;
             //this.modifyTileState()
         } else {
+
             /*checkWord(guess).then((result) => {
                 if (result === true) {
                     state.currentTile = 0;
