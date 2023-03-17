@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 import allKeys from '../data/AllKeys';
 import KeyState from '../data/KeyState';
 import TileState from '../data/TileState';
+import { modifyKeysReducer } from '../middlewares/modifyKeyState';
+import { modifyTileReducer } from '../middlewares/modifyTileState';
 import addLetterReducer from './addLetterReducer';
-import checkRowReducer from './checkRowReducer';
-import { checkWordAsync, checkWordResultReducer } from './checkWordAsync';
+import { moveToNextRowReducer } from './checkWordAsync';
 import deleteLetterReducer from './deleteLetterReducer';
+import { fetchWordAsync, fetchWordResultReducer } from './fetchWordAsync';
 import winGameReducer from './winGame';
 
 export interface GameState {
@@ -32,25 +34,27 @@ const initialState: GameState = {
   keysState: allKeys.map(() => { return KeyState.LightGrey })
 };
 
-function initializeBoardWith(data: any): any[][] {
-  return Array.from(Array(6)).map(() => { return Array.from(Array(5)).map(() => { return data; }); });
-}
-
 export const gameSlice = createSlice({
   name: 'wordle',
   initialState,
   reducers: {
     deleteLetter: deleteLetterReducer,
     addLetter: addLetterReducer,
-   // checkRow: checkRowReducer,
     winGame: winGameReducer,
+    modifyTile: modifyTileReducer,
+    modifyKeys: modifyKeysReducer,
+    moveToNextRow: moveToNextRowReducer,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(checkWordAsync.fulfilled, checkWordResultReducer)}
+      .addCase(fetchWordAsync.fulfilled, fetchWordResultReducer)
+    }
 })
 
-// Action creators are generated for each case reducer function
-export const { deleteLetter, addLetter, winGame } = gameSlice.actions
+export const { deleteLetter, addLetter, winGame, modifyTile, modifyKeys, moveToNextRow } = gameSlice.actions
 
 export default gameSlice.reducer
+
+function initializeBoardWith(data: any): any[][] {
+  return Array.from(Array(6)).map(() => { return Array.from(Array(5)).map(() => { return data; }); });
+}
