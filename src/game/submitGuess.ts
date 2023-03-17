@@ -13,8 +13,8 @@ export const submitGuess = (): AppThunk => (dispatch, getState) => {
         if (guess === state.word) {
             dispatch(endGame())
             dispatch(showMessage("You won! 🎉🎉"))
-            dispatch(modifyKeyState())
-            dispatch(modifyTileState())
+            dispatch(modifyKeyState(state.currentRow))
+            dispatch(modifyTileState(state.currentRow))
         } else {
             dispatch(verifyGuessCorrectness(guess))
         }

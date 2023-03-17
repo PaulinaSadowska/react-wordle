@@ -2,11 +2,11 @@ import KeyState from "../data/KeyState";
 import { AppThunk } from "../redux/store";
 import { modifyKeys } from "./keysSlice";
 
-export const modifyKeyState = (): AppThunk =>
+export const modifyKeyState = (rowToCheck: number): AppThunk =>
     (dispatch, getState) => {
         
         const gameState = getState().game
-        const guessRow = gameState.guessRows[gameState.currentRow - 1]
+        const guessRow = gameState.guessRows[rowToCheck]
         const wordle = gameState.word.split("")
 
         const keyStates =  getState().keys.keysState.slice()

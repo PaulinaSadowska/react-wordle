@@ -3,10 +3,10 @@ import TileState from "../data/TileState";
 import { GameState, modifyTile } from "../game/gameSlice";
 import { AppThunk } from "../redux/store";
 
-export const modifyTileState = (): AppThunk =>
+export const modifyTileState = (rowToCheck: number): AppThunk =>
     (dispatch, getState) => {
         const state = getState().game
-        const guessRow = state.guessRows[state.currentRow - 1]
+        const guessRow = state.guessRows[rowToCheck]
         const wordle = state.word.split("")
 
         guessRow
@@ -14,7 +14,7 @@ export const modifyTileState = (): AppThunk =>
                 const tileState = toTileState(guessedChar, wordle, index)
                 setTimeout(() => {
                     dispatch(modifyTile({
-                        row: state.currentRow - 1,
+                        row: rowToCheck,
                         column: index,
                         tileState: tileState
                     }))

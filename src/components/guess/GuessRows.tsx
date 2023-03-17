@@ -1,21 +1,19 @@
-import TileState from "../../data/TileState";
+import { GameState } from "../../game/gameSlice";
+import { useAppSelector } from "../../redux/hooks";
 import GuessRow from "./GuessRow";
 
+export default function GuessRows() {
 
-interface GuessRowsProps {
-    rows: string[][],
-    tileStates: TileState[][]
-}
+    const state: GameState = useAppSelector(state => state.game)
 
-export default function GuessRows({ rows, tileStates }: GuessRowsProps) {
     return (
         <div className="tile-container">
             {
-                rows.map((row: string[], index: number) => {
+                state.guessRows.map((row: string[], index: number) => {
                     return <div
                         key={`row-${index}`}
                     >
-                        <GuessRow row={row} tileStates={tileStates[index]} />
+                        <GuessRow row={row} tileStates={state.tileStates[index]} />
                     </div>
                 })
             }

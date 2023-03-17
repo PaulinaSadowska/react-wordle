@@ -8,12 +8,13 @@ import { showTemporaryMessage } from "./messageSlice";
 export const verifyGuessCorrectness = (guess: string): AppThunk =>
   async (dispatch, getState) => {
     const result: boolean = await checkWord(guess);
+    const currentRow = getState().game.currentRow
     if (result === true) {
-      dispatch(moveToNextRow())
-      const message = (getState().game.currentRow === 5) ? "Game Over" : `guess is ${guess}`;
+      const message = (currentRow === 5) ? "Game Over" : `guess is ${guess}`;
       dispatch(showTemporaryMessage(message))
-      dispatch(modifyKeyState())
-      dispatch(modifyTileState())
+      dispatch(modifyKeyState(currentRow))
+      dispatch(modifyTileState(currentRow))
+      dispatch(moveToNextRow())
     }
     else {
       dispatch(showTemporaryMessage("Incorrect word"))

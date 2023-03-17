@@ -1,13 +1,13 @@
-import KeyState from "../../data/KeyState";
+import { useAppSelector } from "../../redux/hooks";
 import Key from "./Key";
 
 interface KeyboardProps {
-    keys: string[],
-    keysState: KeyState[]
     onKeyClicked: (text: string) => void
 }
 
-export default function Keyboard({ keys, keysState, onKeyClicked }: KeyboardProps) {
+export default function Keyboard({ onKeyClicked }: KeyboardProps) {
+    const {keys, keysState} = useAppSelector(state => state.keys)
+
     return (
         <div className="key-container">
             {keys.map((key: string, index: number) => {
